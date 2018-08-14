@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+hello
+
+<form th:action="@{/save}" method="post">
+    <input type="" name="username" placeholder="username">
+    <input type="" name="password" placeholder="password">
+    <input type="submit" value="go!">
+</form>
+
+<div th:if="${error}" class="alert alert-danger">
+    [[${error}]]
+</div>
+</body>
+</html>
