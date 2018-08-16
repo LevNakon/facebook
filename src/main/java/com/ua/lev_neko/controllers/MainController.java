@@ -47,6 +47,12 @@ public class MainController {
     @Autowired
     private JavaMailSender sender;
 
+    @Autowired
+    private CustomerEditor customerEditor;
+
+    @Autowired
+    private CustomerValidator customerValidator;
+
     @GetMapping("/")
     public String index(Model model){
         if (SecurityContextHolder.getContext().getAuthentication() != null &&
@@ -94,7 +100,7 @@ public class MainController {
 
         if(customer.isEnabled()){
             return "user";}else {
-            return "login-error";
+            return "login";
         }
 
     }
@@ -121,12 +127,6 @@ public class MainController {
         return "redirect:/login?logout";
     }
 
-
-    @Autowired
-    private CustomerEditor customerEditor;
-    @Autowired
-    private CustomerValidator customerValidator;
-
     @PostMapping("/save")
     public String save(Customer customer , BindingResult result , Model model) throws javax.mail.MessagingException {
         customerValidator.validate(customer,result);
@@ -141,30 +141,20 @@ public class MainController {
         }
         customerEditor.setValue(customer);
         customerService.save(customer);
-        System.out.println(customer.toString());
-
         sendMail(customer.getEmail());
-        return "login";
+        return "registr";
     }
 
     private void sendMail(String email) throws MessagingException, javax.mail.MessagingException {
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
         Customer customer = (Customer) customerService.loadUserByEmail(email);
-//        customer.setCode(UUID.randomUUID().toString());
-//        int id = customer.getId();
-//??????????????
-//        System.out.println(customer.getId());
-//        ????
-        String text = "go to the link, to activate ur account : <a href='http://localhost:8080/activate/"+ /*customer.getCode()*/ 1 +"'>activate</a>";
-        System.out.println(text);
-
-
+        customer.setCode(UUID.randomUUID().toString());
+        customerService.save(customer);
+        String text = "Go to the link, to activate your account : <a href='http://localhost:8080/activate/"+ customer.getCode() +"'>Activate</a>";
         helper.setText(text,true);
-
-        helper.setSubject("huinia");
+        helper.setSubject("Activation Account");
         helper.setTo(email);
-
         sender.send(mimeMessage);
     }
     @GetMapping("/activate/{code}")

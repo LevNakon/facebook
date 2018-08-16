@@ -21,7 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-        return customerDAO.findByUsername(email);
+        return customerDAO.findByEmail(email);
     }
 
     @Override
