@@ -29,6 +29,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @PropertySource("classpath:validation.properties")
@@ -150,11 +151,12 @@ public class MainController {
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
         Customer customer = (Customer) customerService.loadUserByEmail(email);
+//        customer.setCode(UUID.randomUUID().toString());
 //        int id = customer.getId();
 //??????????????
 //        System.out.println(customer.getId());
 //        ????
-        String text = "go to the link, to activate ur account : <a href='http://localhost:8080/activate/"+ 1 +"'>activate</a>";
+        String text = "go to the link, to activate ur account : <a href='http://localhost:8080/activate/"+ /*customer.getCode()*/ 1 +"'>activate</a>";
         System.out.println(text);
 
 
@@ -165,10 +167,10 @@ public class MainController {
 
         sender.send(mimeMessage);
     }
-    @GetMapping("/activate/{id}")
-    public String activate(@PathVariable int id){
+    @GetMapping("/activate/{code}")
+    public String activate(@PathVariable String code){
 
-        Customer user = (Customer) customerService.loadUserById(id);
+        Customer user = (Customer) customerService.loadByCode(code);
         user.setEnabled(true);
         customerService.save(user);
         return "login";

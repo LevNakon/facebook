@@ -9,5 +9,6 @@ public interface CustomerDAO extends JpaRepository<Customer,Integer> {
     Customer findByEmail(String email);
 
     Customer findById(int id);
+    Customer findByCode(String code);
     //Customer deleteByAccountNonExpired(String accountNonExpired);
 }

@@ -25,6 +25,15 @@ public class Customer implements UserDetails {
     private String password;
     private String email;
     private boolean isEnabled = false;
+    private String code;
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
 
     public void setChannels(List<Channel> channels) {
         this.channels = channels;
@@ -34,6 +43,7 @@ public class Customer implements UserDetails {
         this.username = username;
         this.password = password;
         this.email = email;
+
     }
 
     public void setEmail(String email) {

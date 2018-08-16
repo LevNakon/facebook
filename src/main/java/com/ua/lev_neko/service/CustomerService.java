@@ -15,4 +15,5 @@ public interface CustomerService extends UserDetailsService {
 
     UserDetails loadUserById(int id);
 
+    UserDetails loadByCode(String code);
 }

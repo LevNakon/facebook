@@ -28,6 +28,11 @@ public class CustomerServiceImpl implements CustomerService {
     public UserDetails loadUserById(int id) {
         return customerDAO.findById(id);    }
 
+    @Override
+    public UserDetails loadByCode(String code) {
+        return customerDAO.findByCode(code);
+    }
+
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
