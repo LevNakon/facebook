@@ -3,6 +3,8 @@ package com.ua.lev_neko.dao;
 import com.ua.lev_neko.models.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface CustomerDAO extends JpaRepository<Customer,Integer> {
     Customer findByUsername(String username);
 
@@ -10,5 +12,11 @@ public interface CustomerDAO extends JpaRepository<Customer,Integer> {
 
     Customer findById(int id);
     Customer findByCode(String code);
+
+    List<Customer> findAllByName(String name);
+
+    List<Customer> findAllBySurname(String surname);
+
+    List<Customer> findAllByNameAndSurname(String name , String surname);
     //Customer deleteByAccountNonExpired(String accountNonExpired);
 }
