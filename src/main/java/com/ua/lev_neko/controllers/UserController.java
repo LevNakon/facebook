@@ -42,6 +42,7 @@ public class UserController {
             List<Customer> allByName = customerDAO.findAllByName(parametr);
             List<Customer> allBySurname = customerDAO.findAllBySurname(parametr);
             allByName.addAll(allBySurname);
+            allByName.stream().distinct().collect(Collectors.toList());
             if (SecurityContextHolder.getContext().getAuthentication() != null &&
                     SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                     //when Anonymous Authentication is enabled
@@ -71,6 +72,7 @@ public class UserController {
             List<Customer> list2 = customerDAO.findAllByNameAndSurname(p2, p1);
             System.out.println(list2);
             list1.addAll(list2);
+            list1.stream().distinct().collect(Collectors.toList());
             if (SecurityContextHolder.getContext().getAuthentication() != null &&
                     SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                     //when Anonymous Authentication is enabled
