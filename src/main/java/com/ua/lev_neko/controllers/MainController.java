@@ -150,9 +150,11 @@ public class MainController {
         MimeMessage mimeMessage = sender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
         Customer customer = (Customer) customerService.loadUserByEmail(email);
-        int id = customer.getId();
-//
-        String text = "go to the link, to activate ur account : <a href='http://localhost:8080/activate/"+id+"'>activate</a>";
+//        int id = customer.getId();
+//??????????????
+//        System.out.println(customer.getId());
+//        ????
+        String text = "go to the link, to activate ur account : <a href='http://localhost:8080/activate/"+ 1 +"'>activate</a>";
         System.out.println(text);
 
 
