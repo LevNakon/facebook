@@ -9,6 +9,9 @@ import com.ua.lev_neko.utils.CustomerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.messaging.MessagingException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -38,6 +42,9 @@ public class MainController {
 
     @Autowired
     private CustomerServiceImpl customerServiceImpl;
+
+    @Autowired
+    private JavaMailSender sender;
 
     @GetMapping("/")
     public String index(Model model){
@@ -82,10 +89,14 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String login(){
-        return "login";
-    }
+    public String login(Customer customer){
 
+        if(customer.isEnabled()){
+            return "user";}else {
+            return "login-error";
+        }
+
+    }
     @GetMapping("/user/{username}")
     public String user(@PathVariable String username,Model model){
         Customer user =(Customer) customerServiceImpl.loadUserByUsername(username);
@@ -116,7 +127,7 @@ public class MainController {
     private CustomerValidator customerValidator;
 
     @PostMapping("/save")
-    public String save(Customer customer , BindingResult result , Model model){
+    public String save(Customer customer , BindingResult result , Model model) throws javax.mail.MessagingException {
         customerValidator.validate(customer,result);
         if (result.hasErrors()) {
             String errors = "";
@@ -130,6 +141,34 @@ public class MainController {
         customerEditor.setValue(customer);
         customerService.save(customer);
         System.out.println(customer.toString());
+
+        sendMail(customer.getEmail());
+        return "login";
+    }
+
+    private void sendMail(String email) throws MessagingException, javax.mail.MessagingException {
+        MimeMessage mimeMessage = sender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
+        Customer customer = (Customer) customerService.loadUserByEmail(email);
+        int id = customer.getId();
+//
+        String text = "go to the link, to activate ur account : <a href='http://localhost:8080/activate/"+id+"'>activate</a>";
+        System.out.println(text);
+
+
+        helper.setText(text,true);
+
+        helper.setSubject("huinia");
+        helper.setTo(email);
+
+        sender.send(mimeMessage);
+    }
+    @GetMapping("/activate/{id}")
+    public String activate(@PathVariable int id){
+
+        Customer user = (Customer) customerService.loadUserById(id);
+        user.setEnabled(true);
+        customerService.save(user);
         return "login";
     }
 
