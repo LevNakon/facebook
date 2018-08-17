@@ -30,6 +30,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -239,9 +240,22 @@ String subject = "Activate account";
     }
 
     @PostMapping("/upload_avatar")
-    public String upload_avatar(@RequestParam MultipartFile file){
+    public String upload_avatar(@RequestParam MultipartFile file) throws IOException {
 
-        return "redirect:/user";
+       String path =  System.getProperty("user.dir")+ File.separator
+                +"src"+File.separator+
+                "main"+File.separator+
+                "resources"+File.separator+
+                "static" +File.separator+
+                "none.jpg";
+
+        File ffff = new File(path + file.getOriginalFilename());
+        file.transferTo(ffff);
+        Customer user = (Customer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        user.setImage(path+file.getOriginalFilename());
+customerService.save(user);
+        return "user";
     }
 
 
