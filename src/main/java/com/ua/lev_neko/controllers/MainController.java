@@ -75,15 +75,10 @@ public class MainController {
         }
     }
 
-    @PostMapping("/success")
+    /*@PostMapping("/success")
     public String success(Model model){
-        if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
-                //when Anonymous Authentication is enabled
-                !(SecurityContextHolder.getContext().getAuthentication()
-                        instanceof AnonymousAuthenticationToken) ){
-            Customer user = (Customer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            model.addAttribute("user",user);
+        Customer user = findLocalUser();
+        model.addAttribute("user",user);
             Role role = user.getRole();
             if (role.equals(Role.ROLE_USER)){
                 return "redirect:/user/"+user.getUsername();
@@ -91,15 +86,20 @@ public class MainController {
             else{
                 return "redirect:/admin/"+user.getUsername();
             }
-        }
-        return "index";
-    }
+    }*/
 
     @GetMapping("/login")
     public String login(Customer customer){
 
         if(customer.isEnabled()){
-            return "user";}else {
+            Role role = customer.getRole();
+            if (role.equals(Role.ROLE_USER)){
+                return "redirect:/user/"+customer.getUsername();
+            }
+            else{
+                return "redirect:/admin/"+customer.getUsername();
+            }
+        }else {
             return "login";
         }
 
@@ -164,6 +164,19 @@ public class MainController {
         user.setEnabled(true);
         customerService.save(user);
         return "login";
+    }
+
+    public static Customer findLocalUser(){
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+                //when Anonymous Authentication is enabled
+                !(SecurityContextHolder.getContext().getAuthentication()
+                        instanceof AnonymousAuthenticationToken) ) {
+            Customer user = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return user;
+        }else{
+            return null;
+        }
     }
 
 }
