@@ -230,6 +230,14 @@ String subject = "Activate account";
         }
 
     }
+    @GetMapping("/user/{id}/other")
+    public String user_friend(@PathVariable int id,Model model){
+        Customer user =(Customer) customerServiceImpl.loadUserById(id);
+        model.addAttribute("user",user);
+        return "other_user";
+    }
+
+
 
 
 }
