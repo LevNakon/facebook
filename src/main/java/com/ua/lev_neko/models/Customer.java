@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
+import java.io.File;
 import java.util.*;
 
 @Entity
@@ -31,6 +32,17 @@ public class Customer implements UserDetails {
     private String surname;
     private int age;
     private String city;
+    private String image;
+
+
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getName() {
         return name;
