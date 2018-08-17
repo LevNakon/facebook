@@ -22,8 +22,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -147,8 +149,7 @@ customer.setImage(System.getProperty("user.dir")+ File.separator
         "main"+File.separator+
         "resources"+File.separator+
         "static" +File.separator+
-        "avatars"+File.separator+
-        "none.jpeg"
+        "none.jpg"
 );
 
 
@@ -237,7 +238,11 @@ String subject = "Activate account";
         return "other_user";
     }
 
+    @PostMapping("/upload_avatar")
+    public String upload_avatar(@RequestParam MultipartFile file){
 
+        return "redirect:/user";
+    }
 
 
 }
