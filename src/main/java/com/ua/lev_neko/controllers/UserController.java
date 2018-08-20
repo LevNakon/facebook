@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.xml.bind.SchemaOutputResolver;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -42,7 +44,7 @@ public class UserController {
             List<Customer> allByName = customerDAO.findAllByName(parametr);
             List<Customer> allBySurname = customerDAO.findAllBySurname(parametr);
             allByName.addAll(allBySurname);
-            allByName.stream().distinct().collect(Collectors.toList());
+            Set<Customer> allByName1 = new HashSet<>(allByName);
             if (SecurityContextHolder.getContext().getAuthentication() != null &&
                     SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                     //when Anonymous Authentication is enabled
@@ -50,17 +52,17 @@ public class UserController {
                             instanceof AnonymousAuthenticationToken) ) {
                 Customer uzer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 int id = uzer.getId();
-                Iterator<Customer> iter = allByName.iterator();
+                Iterator<Customer> iter = allByName1.iterator();
                 while (iter.hasNext()){
                     Customer next = iter.next();
                     if(next.getId()== id){
                         iter.remove();
                     }
                 }
-                model.addAttribute("users", allByName.toArray());
+                model.addAttribute("users", allByName1);
                 return "UserList";
             }else{
-                model.addAttribute("users", allByName);
+                model.addAttribute("users", allByName1);
                 return "UserList";
             }
         }
@@ -72,7 +74,7 @@ public class UserController {
             List<Customer> list2 = customerDAO.findAllByNameAndSurname(p2, p1);
             System.out.println(list2);
             list1.addAll(list2);
-            list1.stream().distinct().collect(Collectors.toList());
+            Set<Customer> list = new HashSet<>(list1);
             if (SecurityContextHolder.getContext().getAuthentication() != null &&
                     SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                     //when Anonymous Authentication is enabled
@@ -80,19 +82,19 @@ public class UserController {
                             instanceof AnonymousAuthenticationToken) ) {
                 Customer uzero = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
                 int id = uzero.getId();
-                Iterator<Customer> iter = list1.iterator();
+                Iterator<Customer> iter = list.iterator();
                 while (iter.hasNext()){
                     Customer next = iter.next();
                     if(next.getId()== id){
                         iter.remove();
                     }
                 }
-                model.addAttribute("users", list1);
+                model.addAttribute("users", list);
                 System.out.println(list1);
                 return "UserList";
             }
             else{
-                model.addAttribute("users", list1);
+                model.addAttribute("users", list);
                 return "UserList";
             }
         }else if(param.length >= 3){
@@ -100,6 +102,19 @@ public class UserController {
             return "UserList";
         }
         return "UserList";
+    }
+
+    public Customer findActiveUser(){
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+                //when Anonymous Authentication is enabled
+                !(SecurityContextHolder.getContext().getAuthentication()
+                        instanceof AnonymousAuthenticationToken) ) {
+            Customer user = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return user;
+        }else{
+            return null;
+        }
     }
 
 
