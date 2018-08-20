@@ -41,62 +41,16 @@ public class UserController {
         String[] param = user.split(" ");
         if (param.length == 1){
             String parametr = param[0];
-            List<Customer> allByName = customerDAO.findAllByName(parametr);
-            List<Customer> allBySurname = customerDAO.findAllBySurname(parametr);
-            allByName.addAll(allBySurname);
-            Set<Customer> allByName1 = new HashSet<>(allByName);
-            if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                    SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
-                    //when Anonymous Authentication is enabled
-                    !(SecurityContextHolder.getContext().getAuthentication()
-                            instanceof AnonymousAuthenticationToken) ) {
-                Customer uzer = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                int id = uzer.getId();
-                Iterator<Customer> iter = allByName1.iterator();
-                while (iter.hasNext()){
-                    Customer next = iter.next();
-                    if(next.getId()== id){
-                        iter.remove();
-                    }
-                }
-                model.addAttribute("users", allByName1);
-                return "UserList";
-            }else{
-                model.addAttribute("users", allByName1);
-                return "UserList";
-            }
+            Set<Customer> byOneParam = findByOneParam(parametr);
+            model.addAttribute("users", byOneParam);
+            return "UserList";
         }
         else if (param.length == 2){
             String p1 = param[0];
             String p2 = param[1];
-            List<Customer> list1 = customerDAO.findAllByNameAndSurname(p1, p2);
-            System.out.println(list1);
-            List<Customer> list2 = customerDAO.findAllByNameAndSurname(p2, p1);
-            System.out.println(list2);
-            list1.addAll(list2);
-            Set<Customer> list = new HashSet<>(list1);
-            if (SecurityContextHolder.getContext().getAuthentication() != null &&
-                    SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
-                    //when Anonymous Authentication is enabled
-                    !(SecurityContextHolder.getContext().getAuthentication()
-                            instanceof AnonymousAuthenticationToken) ) {
-                Customer uzero = (Customer) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                int id = uzero.getId();
-                Iterator<Customer> iter = list.iterator();
-                while (iter.hasNext()){
-                    Customer next = iter.next();
-                    if(next.getId()== id){
-                        iter.remove();
-                    }
-                }
-                model.addAttribute("users", list);
-                System.out.println(list1);
-                return "UserList";
-            }
-            else{
-                model.addAttribute("users", list);
-                return "UserList";
-            }
+            Set<Customer> byTwoParam = findByTwoParam(p1, p2);
+            model.addAttribute("users", byTwoParam);
+            return "UserList";
         }else if(param.length >= 3){
             model.addAttribute("error","You entered something wrong");
             return "UserList";
@@ -116,6 +70,41 @@ public class UserController {
             return null;
         }
     }
+
+    public Set<Customer> findByOneParam(String parametr){
+        List<Customer> allByName = customerDAO.findAllByName(parametr);
+        List<Customer> allBySurname = customerDAO.findAllBySurname(parametr);
+        allByName.addAll(allBySurname);
+        Set<Customer> allByName1 = new HashSet<>(allByName);
+        Customer user = findActiveUser();
+        int id = user.getId();
+        Iterator<Customer> iter = allByName1.iterator();
+        while (iter.hasNext()){
+            Customer next = iter.next();
+            if(next.getId()== id){
+                iter.remove();
+            }
+        }
+        return allByName1;
+    }
+
+    public Set<Customer> findByTwoParam(String p1 , String p2){
+        List<Customer> list1 = customerDAO.findAllByNameAndSurname(p1, p2);
+        List<Customer> list2 = customerDAO.findAllByNameAndSurname(p2, p1);
+        list1.addAll(list2);
+        Set<Customer> list = new HashSet<>(list1);
+        Customer user = findActiveUser();
+        int id = user.getId();
+        Iterator<Customer> iter = list.iterator();
+        while (iter.hasNext()){
+            Customer next = iter.next();
+            if(next.getId()== id){
+                iter.remove();
+            }
+        }
+        return list;
+    }
+
 
 
 }
