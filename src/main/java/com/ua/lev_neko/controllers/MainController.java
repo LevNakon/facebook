@@ -150,17 +150,12 @@ customer.setImage(System.getProperty("user.dir")+ File.separator
         "main"+File.separator+
         "resources"+File.separator+
         "static" +File.separator+
+        "avatars"+File.separator+
         "none.jpg"
 );
-
-
-
         customerService.save(customer);
-
         String text = "Go to the link, to activate your account : <a href='http://localhost:8080/activate/"+ customer.getCode() +"'>Activate</a>";
 String subject = "Activate account";
-
-
 
         sendMail(customer.getEmail(), subject , text);
 
@@ -249,10 +244,9 @@ String subject = "Activate account";
                 "static" +File.separator+
                 "avatars"+File.separator;
 
-        File avatar = new File(path + file.getOriginalFilename());
-        file.transferTo(avatar);
-        Customer user = (Customer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        Customer user = (Customer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        file.transferTo(new File(path + file.getOriginalFilename()));
         user.setImage(path+file.getOriginalFilename());
 customerService.save(user);
         return "user";
