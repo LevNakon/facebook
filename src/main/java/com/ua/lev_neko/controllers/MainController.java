@@ -247,10 +247,10 @@ String subject = "Activate account";
                 "main"+File.separator+
                 "resources"+File.separator+
                 "static" +File.separator+
-                "none.jpg";
+                "avatars"+File.separator;
 
-        File ffff = new File(path + file.getOriginalFilename());
-        file.transferTo(ffff);
+        File avatar = new File(path + file.getOriginalFilename());
+        file.transferTo(avatar);
         Customer user = (Customer)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         user.setImage(path+file.getOriginalFilename());
