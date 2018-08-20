@@ -2,23 +2,25 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>-->
+    <!--<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
     <title>List of users</title>
 </head>
 <body>
-<!--<form th:action="@{/findUsers}" method="get">-->
-    <!--<input type="text" placeholder="Find user" name="user">-->
-    <!--<input type="submit" value="Submit!">-->
-<!--</form>-->
-<!--<ul th:each="user : ${users}">-->
-    <!--<li>-->
-        <!--<a th:href="'/user/'+${user.id}" th:text="'ID - '+${user.id}+' Name - ' + ${user.name} + ' Surname - ' + ${user.surname} + ' Age - ' + ${user.age}"></a>-->
-    <!--</li>-->
-<!--</ul>-->
-<!--<p th:text="${error}"></p>-->
-<input type="text" id="inp">
-<button id="clicker"></button>
-<div id="box"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="main.js"></script>
+<form th:action="@{/findUsers}" method="get">
+    <input type="text" placeholder="Find user" name="user">
+    <input type="submit" value="Submit!">
+</form>
+<ul th:each="user : ${users}">
+    <li>
+        <a th:href="'/user/'+${user.id}" th:text="'ID - '+${user.id}+' Name - ' + ${user.name} + ' Surname - ' + ${user.surname} + ' Age - ' + ${user.age}"></a>
+    </li>
+</ul>
+<p th:text="${error}"></p>
+<!--<input type="text" id="inp">-->
+<!--<button id="clicker"></button>-->
+<!--<div id="box"></div>-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+<!--<script src="main.js"></script>-->
 </body>
 </html>

@@ -1,5 +1,7 @@
 let $box = $("box");
 let $clicker = $("#clicker");
+let token = $('#_csrf').attr('content');
+let header = $('#_csrf_header').attr('content');
 $clicker.click(function () {
     let $input = $("#inp");
     let parametr = $input.val();
@@ -10,13 +12,21 @@ $clicker.click(function () {
         type: 'PUT',
         data: param,
         contentType:'application/json',
-        error:function(error){
-            console.log(error);
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
         },
-        success: function (res) {
-            $(res).each(function (i,odj) {
-                console.log(obj.name);
+        success: function(data, textStatus, jqXHR) {
+            console.log(data);
+            $(data).each(function (i, obj) {
+                let $div = $("<div/>", {
+                    text: obj.name
+                });
+                $box.append($div);
             })
+        },
+        error: function(request, status, error) {
+            alert(status);
+            alert(error);
         }
     })
 });

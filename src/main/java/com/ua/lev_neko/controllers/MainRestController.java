@@ -3,7 +3,6 @@ package com.ua.lev_neko.controllers;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.ua.lev_neko.dao.CustomerDAO;
 import com.ua.lev_neko.models.Customer;
-import com.ua.lev_neko.models.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +16,9 @@ public class MainRestController {
     @Autowired
     private CustomerDAO customerDAO;
 
-    @PutMapping("/findUsers")
-    public List<String> findUsers(@RequestBody Param param ){
-        /*String parametr = param.getParametr();
+    /*@PutMapping("/findUsers")
+    public Set<Customer> findUsers(@RequestBody Param param ){
+        String parametr = param.getParametr();
         String[] parametros = parametr.split(" ");
         if (parametros.length == 1) {
             String param1 = parametros[0];
@@ -32,13 +31,13 @@ public class MainRestController {
             return list;
         }else{
             return null;
-        }*/
-        System.out.println("lololololololololololo");
-        String parametr = param.getParametr();
-        String[] parametros = parametr.split(" ");
-        List<String> list = new LinkedList<>();
-        list.addAll(Arrays.asList(parametros));
-        return list;
-    }
+        }
+//        System.out.println("lololololololololololo");
+//        String parametr = param.getParametr();
+//        String[] parametros = parametr.split(" ");
+//        List<String> list = new LinkedList<>();
+//        list.addAll(Arrays.asList(parametros));
+//        return list;
+    }*/
 
 }

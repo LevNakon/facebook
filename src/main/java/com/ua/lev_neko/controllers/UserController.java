@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.xml.bind.SchemaOutputResolver;
@@ -37,7 +38,7 @@ public class UserController {
             return "UserList";
         }
 
-    /*@GetMapping("/findUsers")
+    @GetMapping("/findUsers")
         public String findUsers(@RequestParam("user") String user , Model model){
         String[] param = user.split(" ");
         if (param.length == 1) {
@@ -56,7 +57,7 @@ public class UserController {
             return "UserList";
         }
         return "UserList";
-    }*/
+    }
 
     public static Set<Customer> finByOneParam(String parametr) {
         List<Customer> allByName = customerDAO1.findAllByName(parametr);
